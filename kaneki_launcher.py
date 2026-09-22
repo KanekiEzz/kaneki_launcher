@@ -34,7 +34,7 @@ DEFAULT_TITLE = "KANEKI"
 APPS = [
     {
         "name": "Ft_lock",
-        "icon": "lock3.png",
+        "icon": "lock.png",
         "command": "ft_lock",
     },
     {
@@ -279,7 +279,8 @@ def main():
             canvas.tag_bind(item, "<Button-1>", lambda e, a=app: launch(a))
 
     # ----- footer -----
-    tk.Label(root, text="Esc to quit", font=(FONT, 9), fg=MUTED, bg=BG).pack(pady=4)
+    # tk.Label(root, text="Esc to quit", font=(FONT, 9), fg=MUTED, bg=BG).pack(pady=4)
+    tk.Label(root, text="_____________+______________", font=(FONT, 9), fg=MUTED, bg=BG).pack(pady=4)
 
     root.mainloop()
 
