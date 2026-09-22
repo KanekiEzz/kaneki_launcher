@@ -182,8 +182,8 @@ def main():
         images.append(bg_image)
 
         canvas.create_image(
-            WIN_W // 4,
-            CANVAS_H // 4,
+            WIN_W // 2,
+            CANVAS_H // 2,
             image=bg_image
         )
     except tk.TclError as e:
