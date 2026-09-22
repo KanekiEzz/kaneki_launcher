@@ -101,6 +101,56 @@ def main():
     root.configure(bg=BG)
     root.resizable(False, False)
 
+    # ---------- ft_lock pipe ----------
+    PIPE_PATH = Path("/dev/shm/ft_lock_d.103903.pipe")
+    pipe_process = None
+
+        # Remove old pipe if it exists
+    try:
+        if PIPE_PATH.exists() or PIPE_PATH.is_symlink():
+            PIPE_PATH.unlink()
+    except Exception as e:
+        print(f"Could not remove old pipe: {e}")
+
+    # Start:
+    # cat /dev/random > /dev/shm/ft_lock_d.103903.pipe
+    try:
+        pipe_process = subprocess.Popen(
+            ["cat", "/dev/random"],
+            stdout=open(PIPE_PATH, "wb"),
+            start_new_session=True,
+        )
+        print(f"ft_lock pipe started: {PIPE_PATH}")
+    except Exception as e:
+        print(f"Could not start ft_lock pipe: {e}")
+        pipe_process = None
+
+    def cleanup():
+        """Stop cat and remove the pipe when Kaneki closes."""
+        nonlocal pipe_process
+
+        if pipe_process is not None:
+            try:
+                pipe_process.terminate()
+                pipe_process.wait(timeout=1)
+            except Exception:
+                try:
+                    pipe_process.kill()
+                except Exception:
+                    pass
+
+        try:
+            if PIPE_PATH.exists() or PIPE_PATH.is_symlink():
+                PIPE_PATH.unlink()
+                print(f"Removed pipe: {PIPE_PATH}")
+        except Exception as e:
+            print(f"Could not remove pipe: {e}")
+
+        root.destroy()
+
+    # Close window / Alt+F4 / WM close
+    root.protocol("WM_DELETE_WINDOW", cleanup)
+
     try:
         window_icon = tk.PhotoImage(file=str(ICON_PATH))
         root.iconphoto(True, window_icon)
@@ -108,7 +158,8 @@ def main():
         print(f"Icon not loaded: {e}")
 
     center_window(root, WIN_W, WIN_H)
-    root.bind("<Escape>", lambda e: root.destroy())
+    # root.bind("<Escape>", lambda e: root.destroy())
+    root.bind("<Escape>", lambda e: cleanup())
 
     # canvas = tk.Canvas(
     #     root, width=WIN_W, height=CANVAS_H, bg=BG, highlightthickness=0

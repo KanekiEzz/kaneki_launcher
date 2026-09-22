@@ -34,14 +34,12 @@ fi
 
 mkdir -p "$INSTALL_DIR/icons" "$ICON_DIR" "$DESKTOP_DIR"
 
-# Copy app files
 install -m 755 "$SRC_DIR/kaneki_launcher.py" "$INSTALL_DIR/kaneki_launcher.py"
 install -m 644 "$SRC_DIR/kaneki.png"         "$INSTALL_DIR/kaneki.png"
 install -m 644 "$SRC_DIR/background.png"         "$INSTALL_DIR/background.png"
 cp -f "$SRC_DIR"/icons/*.png "$INSTALL_DIR/icons/"
 install -m 644 "$SRC_DIR/kaneki.png"         "$ICON_DIR/$APP_ID.png"
 
-# Write the .desktop entry with absolute paths
 cat > "$DESKTOP_FILE" <<EOF
 [Desktop Entry]
 Type=Application
